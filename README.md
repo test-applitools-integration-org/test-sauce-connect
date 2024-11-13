@@ -15,7 +15,7 @@ Before running the tests, ensure you have the following installed:
 
 2. Verify the installation:
 ```bash
-sc --version
+sc version
 ```
 
 3. Make sure to note the path to your Sauce Connect binary as you'll need it for the `SAUCE_CONNECT_BIN` environment variable.
