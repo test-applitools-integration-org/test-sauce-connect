@@ -7,6 +7,18 @@ Before running the tests, ensure you have the following installed:
 - Bundler gem
 - SauceLabs account
 - Applitools account
+- Sauce Connect Proxy
+
+### Verify Sauce Connect Installation
+
+1. Download Sauce Connect from [SauceLabs Official Website](https://docs.saucelabs.com/secure-connections/sauce-connect/installation/)
+
+2. Verify the installation:
+```bash
+sc --version
+```
+
+3. Make sure to note the path to your Sauce Connect binary as you'll need it for the `SAUCE_CONNECT_BIN` environment variable.
 
 ## Installation
 
