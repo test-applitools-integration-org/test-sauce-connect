@@ -1,0 +1,14 @@
+export SAUCE_SERVER_URL="https://ondemand.us-west-1.saucelabs.com:443/wd/hub"
+export SAUCE_TUNNEL_ID="applitools-proxy-test"
+export APPLITOOLS_LOG_DIR=./logs
+
+
+export SAUCE_USERNAME=
+export SAUCE_ACCESS_KEY=
+export SAUCE_CONNECT_BIN=
+
+export APP_APK_URL=
+
+export APPLITOOLS_API_KEY=
+export APPLITOOLS_SERVER_URL=
+export APPLITOOLS_PROXY_URL=
