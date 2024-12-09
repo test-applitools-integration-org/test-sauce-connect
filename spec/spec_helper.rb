@@ -10,7 +10,7 @@ class SauceTunnel
   RETRY_INTERVAL = 8
   CONNECTION_TIMEOUT = 10
 
-  def initialize(username, access_key, sc_path, tunnel_name, dns, no_ssl_bump_domains)
+  def initialize(username, access_key, sc_path, tunnel_name, dns, no_ssl_bump_domains, proxy)
     @sauce_connect = nil
     @sc_path = sc_path
     @tunnel_name = tunnel_name
@@ -18,6 +18,7 @@ class SauceTunnel
     @no_ssl_bump_domains = no_ssl_bump_domains
     @user = username
     @access_key = access_key
+    @proxy = proxy
   end
 
   def process_alive?(pid)
@@ -86,7 +87,7 @@ class SauceTunnel
     ) do
       sc_call = "#{@sc_path} legacy -u #{@user} -k #{@access_key} --region us-west " \
         "--tunnel-name #{@tunnel_name} --status-address 127.0.0.1:8080 --logfile logs/sc.log " \
-        "--verbose"
+        "--verbose --proxy #{@proxy}"
 
       sc_call += " --dns #{@dns}" if @dns
       sc_call += " --no-ssl-bump-domains #{@no_ssl_bump_domains}" if @no_ssl_bump_domains

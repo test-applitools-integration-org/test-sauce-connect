@@ -22,7 +22,8 @@ RSpec.describe 'Appium Tests' do
       SAUCE_CONNECT_BIN,
       SAUCE_TUNNEL_ID,
       false,
-      true
+      true,
+      APPLITOOLS_PROXY_URL
     )
     @tunnel.start
   end
