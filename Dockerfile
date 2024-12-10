@@ -10,6 +10,7 @@ RUN apt-get update && \
     iptables \
     dnsutils \
     net-tools \
+    netcat-traditional \
     wget \
     && rm -rf /var/lib/apt/lists/*
 

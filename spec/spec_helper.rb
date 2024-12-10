@@ -54,7 +54,7 @@ class SauceTunnel
   end
 
   def wait_for_sc_readiness(timeout_seconds = 300)
-    readiness_url = 'http://127.0.0.1:8080/status'
+    readiness_url = 'http://127.0.0.1:8989/status'
     start_time = Time.now
     attempt = 1
 
@@ -86,7 +86,7 @@ class SauceTunnel
       on: [StandardError]
     ) do
       sc_call = "#{@sc_path} legacy -u #{@user} -k #{@access_key} --region us-west " \
-        "--tunnel-name #{@tunnel_name} --status-address 127.0.0.1:8080 --logfile logs/sc.log " \
+        "--tunnel-name #{@tunnel_name} --status-address 127.0.0.1:8989 --logfile logs/sc.log " \
         "--verbose --proxy #{@proxy}"
 
       sc_call += " --dns #{@dns}" if @dns

@@ -25,6 +25,12 @@ iptables -A OUTPUT -p tcp -d test-proxy --dport 3128 -j ACCEPT
 iptables -A INPUT -j LOG --log-prefix "Dropped Input: "
 iptables -A OUTPUT -j LOG --log-prefix "Dropped Output: "
 
+# Add these rules for port 8989
+iptables -A INPUT -p tcp --dport 8989 -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 8989 -j ACCEPT
+iptables -A INPUT -i lo -p tcp --dport 8989 -j ACCEPT
+iptables -A OUTPUT -o lo -p tcp --dport 8989 -j ACCEPT
+
 echo "=== Network Isolation Tests ==="
 
 echo "=== IPTables Rules ==="
@@ -82,5 +88,12 @@ for endpoint in "saucelabs.com" "applitools.com"; do
         exit 1
     fi
 done
+
+echo "=== Testing port 8989 availability ==="
+if nc -z localhost 8989; then
+    echo "SUCCESS: Port 8989 is available"
+else
+    echo "ERROR: Port 8989 is not available"
+fi
 
 echo -e "\n=== All tests completed successfully ==="
