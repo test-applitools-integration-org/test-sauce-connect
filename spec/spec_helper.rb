@@ -54,7 +54,7 @@ class SauceTunnel
   end
 
   def wait_for_sc_readiness(timeout_seconds = 300)
-    readiness_url = 'http://127.0.0.1:8989/status'
+    readiness_url = 'http://localhost:8989/status'
     start_time = Time.now
     attempt = 1
 
@@ -87,13 +87,14 @@ class SauceTunnel
     ) do
       sc_call = "#{@sc_path} legacy -u #{@user} -k #{@access_key} --region us-west " \
         "--tunnel-name #{@tunnel_name} --status-address localhost:8989 --logfile logs/sc.log " \
-        "--verbose --proxy #{@proxy}"
+        "--verbose --proxy #{@proxy} --proxy-tunnel"
 
       sc_call += " --dns #{@dns}" if @dns
       sc_call += " --no-ssl-bump-domains #{@no_ssl_bump_domains}" if @no_ssl_bump_domains
 
       sc_call = sc_call.split(' ') unless Gem.win_platform?
 
+      puts "Starting Sauce Connect with command:"
       puts sc_call.join(' ') if sc_call.is_a?(Array)
       puts sc_call if sc_call.is_a?(String)
 

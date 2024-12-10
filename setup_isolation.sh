@@ -10,16 +10,18 @@ iptables -P OUTPUT DROP
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A OUTPUT -o lo -j ACCEPT
 
-# Allow DNS queries to Docker DNS
+# Allow DNS queries to Docker DNS and through proxy
 iptables -A OUTPUT -p udp -d 127.0.0.11 --dport 53 -j ACCEPT
 iptables -A INPUT -p udp -s 127.0.0.11 --sport 53 -j ACCEPT
+
+# Allow DNS resolution through the proxy
+iptables -A OUTPUT -p tcp -d test-proxy --dport 3128 -j ACCEPT
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Allow established connections
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-
-# Allow traffic to proxy with container name
-iptables -A OUTPUT -p tcp -d test-proxy --dport 3128 -j ACCEPT
 
 # Log dropped packets
 iptables -A INPUT -j LOG --log-prefix "Dropped Input: "
