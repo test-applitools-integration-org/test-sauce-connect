@@ -91,11 +91,4 @@ for endpoint in "saucelabs.com" "applitools.com"; do
     fi
 done
 
-echo "=== Testing port 8989 availability ==="
-if nc -z localhost 8989; then
-    echo "SUCCESS: Port 8989 is available"
-else
-    echo "ERROR: Port 8989 is not available"
-fi
-
 echo -e "\n=== All tests completed successfully ==="
