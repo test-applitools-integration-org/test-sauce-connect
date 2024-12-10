@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y build-essential curl unzip && rm -rf /v
 
 # Install Sauce Connect
 RUN curl -L -o /tmp/sauce-connect.deb \
-    https://saucelabs.com/downloads/sauce-connect/5.2.2/sauce-connect_5.2.2.linux_arm64.deb && \
+    https://saucelabs.com/downloads/sauce-connect/5.2.2/sauce-connect_5.2.2.linux_amd64.deb && \
     dpkg -i /tmp/sauce-connect.deb && \
     rm -f /tmp/sauce-connect.deb
 
