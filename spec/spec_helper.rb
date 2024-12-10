@@ -86,7 +86,7 @@ class SauceTunnel
       on: [StandardError]
     ) do
       sc_call = "#{@sc_path} legacy -u #{@user} -k #{@access_key} --region us-west " \
-        "--tunnel-name #{@tunnel_name} --status-address 127.0.0.1:8989 --logfile logs/sc.log " \
+        "--tunnel-name #{@tunnel_name} --status-address localhost:8989 --logfile logs/sc.log " \
         "--verbose --proxy #{@proxy}"
 
       sc_call += " --dns #{@dns}" if @dns
