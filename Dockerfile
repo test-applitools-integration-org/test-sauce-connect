@@ -1,7 +1,17 @@
-FROM ruby:3.1
+FROM ruby:3.1-slim
 
-# Install required packages
-RUN apt-get update && apt-get install -y build-essential curl unzip && rm -rf /var/lib/apt/lists/*
+# Install basic tools and cleanup in single layer
+RUN apt-get update && \
+    apt-get install -y \
+    build-essential \
+    curl \
+    iproute2 \
+    iputils-ping \
+    iptables \
+    dnsutils \
+    net-tools \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Sauce Connect
 RUN curl -L -o /tmp/sauce-connect.deb \
@@ -19,8 +29,14 @@ WORKDIR /app
 # Copy test files
 COPY spec ./spec/
 COPY Gemfile .
+COPY setup_isolation.sh .
 
-# Install dependencies
-RUN gem install bundler
-RUN bundle install
+# Install gems
+RUN gem install bundler && \
+    bundle install
 
+# Add container health verification script
+RUN chmod +x /app/setup_isolation.sh
+
+# Default command to verify isolation and run tests
+CMD ["/bin/bash", "-c", "/app/setup_isolation.sh && bundle exec rspec"]
