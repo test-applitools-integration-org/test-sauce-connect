@@ -57,5 +57,5 @@ docker run --rm \
         dmesg | grep "Dropped"
         exit 1
     }
-    pytest -vs tests/
+    python -m pytest -vs tests/
     '

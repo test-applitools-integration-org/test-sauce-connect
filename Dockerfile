@@ -30,10 +30,11 @@ ENV PYTHONDONTWRITEBYTECODE=1
 WORKDIR /app
 
 # Copy requirements first to leverage Docker cache
+COPY pyproject.toml .
 COPY requirements.lock .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.lock
+RUN PYTHONDONTWRITEBYTECODE=1 pip install --no-cache-dir -r requirements.lock
 
 # Copy test files
 COPY tests/ ./tests/
