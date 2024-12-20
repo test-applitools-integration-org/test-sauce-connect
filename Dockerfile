@@ -1,4 +1,4 @@
-FROM ruby:3.1-slim
+FROM python:3.11-slim
 
 # Install basic tools and cleanup in single layer
 RUN apt-get update && \
@@ -23,21 +23,27 @@ RUN curl -L -o /tmp/sauce-connect.deb \
 ENV SAUCE_CONNECT_BIN=/usr/bin/sc
 ENV APPLITOOLS_LOG_DIR=./logs
 ENV APPLITOOLS_PROXY_URL="http://test-proxy:3128"
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
 # Set working directory
 WORKDIR /app
 
-# Copy test files
-COPY spec ./spec/
-COPY Gemfile .
-COPY setup_isolation.sh .
+# Copy requirements first to leverage Docker cache
+COPY requirements.lock .
 
-# Install gems
-RUN gem install bundler && \
-    bundle install
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.lock
+
+# Copy test files
+COPY tests/ ./tests/
+COPY setup_isolation.sh .
 
 # Add container health verification script
 RUN chmod +x /app/setup_isolation.sh
 
+# Create directory for logs
+RUN mkdir -p /app/logs
+
 # Default command to verify isolation and run tests
-CMD ["/bin/bash", "-c", "/app/setup_isolation.sh && bundle exec rspec"]
+CMD ["/bin/bash", "-c", "/app/setup_isolation.sh && pytest -v"]
