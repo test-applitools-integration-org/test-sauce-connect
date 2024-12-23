@@ -22,7 +22,8 @@ RUN curl -L -o /tmp/sauce-connect.deb \
 
 ENV SAUCE_CONNECT_BIN=/usr/bin/sc
 ENV APPLITOOLS_LOG_DIR=./logs
-ENV APPLITOOLS_PROXY_URL="http://test-proxy:3128"
+ENV APPLITOOLS_PROXY_URL=http://test-proxy:3128
+
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
@@ -45,6 +46,3 @@ RUN chmod +x /app/setup_isolation.sh
 
 # Create directory for logs
 RUN mkdir -p /app/logs
-
-# Default command to verify isolation and run tests
-CMD ["/bin/bash", "-c", "/app/setup_isolation.sh && pytest -v"]
