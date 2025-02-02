@@ -57,5 +57,5 @@ docker run --rm \
         dmesg | grep "Dropped"
         exit 1
     }
-     npx mocha spec/test-appium-spec.js
+     npx mocha spec/test-appium.spec.js
     '

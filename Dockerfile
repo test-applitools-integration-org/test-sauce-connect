@@ -39,4 +39,4 @@ RUN npm install
 RUN chmod +x /app/setup_isolation.sh
 
 # Default command to verify isolation and run tests
-CMD ["/bin/bash", "-c", "/app/setup_isolation.sh && npx mocha spec/test-appium-spec.js"]
+CMD ["/bin/bash", "-c", "/app/setup_isolation.sh && npx mocha spec/test-appium.spec.js"]
