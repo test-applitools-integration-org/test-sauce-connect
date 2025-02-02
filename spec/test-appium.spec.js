@@ -24,7 +24,6 @@ const capabilities = {
 describe('proxy', function() {
   let driver
   let sc
-  let stdout = ''
 
   this.timeout(0)
 
@@ -65,12 +64,15 @@ describe('proxy', function() {
   async function startSauceConnect() {
   return new Promise((resolve, reject) => {
     const sauceConnectArgs = [
-      'run',
-      '--username', process.env.SAUCE_USERNAME,
-      '--access-key', process.env.SAUCE_ACCESS_KEY,
+      'legacy',
+      '-u', process.env.SAUCE_USERNAME,
+      '-k', process.env.SAUCE_ACCESS_KEY,
       '--region', 'us-west',
       '--tunnel-name', 'applitools-proxy-test',
       '--proxy', process.env.APPLITOOLS_PROXY_URL,
+      '--status-address', 'localhost:8989',
+      '--logfile', 'logs/sc.log',
+      '--verbose',
       // ... any other Sauce Connect arguments you need (e.g., --region, --proxy, etc.)
     ];
 
