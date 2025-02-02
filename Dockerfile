@@ -1,4 +1,4 @@
-FROM ruby:3.1-slim
+FROM node:16-slim
 
 # Install basic tools and cleanup in single layer
 RUN apt-get update && \
