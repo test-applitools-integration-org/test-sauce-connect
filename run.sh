@@ -57,5 +57,5 @@ docker run --rm \
         dmesg | grep "Dropped"
         exit 1
     }
-    bundle exec rspec spec/test_appium_proxy.rb --format documentation
+     npx mocha spec/test-appium-spec.js
     '

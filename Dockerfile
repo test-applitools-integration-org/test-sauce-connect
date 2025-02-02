@@ -29,15 +29,14 @@ WORKDIR /app
 
 # Copy test files
 COPY spec ./spec/
-COPY Gemfile .
+COPY package.json .
 COPY setup_isolation.sh .
 
-# Install gems
-RUN gem install bundler && \
-    bundle install
+# Install dependencies
+RUN npm install
 
 # Add container health verification script
 RUN chmod +x /app/setup_isolation.sh
 
 # Default command to verify isolation and run tests
-CMD ["/bin/bash", "-c", "/app/setup_isolation.sh && bundle exec rspec"]
+CMD ["/bin/bash", "-c", "/app/setup_isolation.sh && npx mocha spec/test-appium-spec.js"]
