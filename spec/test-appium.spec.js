@@ -1,6 +1,10 @@
-const wdio = require('webdriverio') //selenium / wdio
+const wdio = require('webdriverio')
 const {Eyes, Target} = require('@applitools/eyes-webdriverio')
 const {spawn} = require('child_process')
+const { setGlobalDispatcher, ProxyAgent } = require('undici');
+
+const dispatcher = new ProxyAgent({ uri: new URL(process.env.APPLITOOLS_PROXY_URL).toString() });
+setGlobalDispatcher(dispatcher);
 
 const capabilities = {
   platformName: 'Android',
@@ -29,6 +33,7 @@ describe('proxy', function() {
 
   before(async () => {
     await startSauceConnect()
+    console.log('sauce connect started');
   })
 
   beforeEach(async () => {
@@ -40,6 +45,7 @@ describe('proxy', function() {
       protocol: 'https',
       path: '/wd/hub'
     })
+    console.log('sauce driver created');
   })
 
   after(async () => {
@@ -62,44 +68,58 @@ describe('proxy', function() {
   })
 
   async function startSauceConnect() {
-  return new Promise((resolve, reject) => {
-    const sauceConnectArgs = [
-      'legacy',
-      '-u', process.env.SAUCE_USERNAME,
-      '-k', process.env.SAUCE_ACCESS_KEY,
-      '--region', 'us-west',
-      '--tunnel-name', 'applitools-proxy-test',
-      '--proxy', process.env.APPLITOOLS_PROXY_URL,
-      '--status-address', 'localhost:8989',
-      '--logfile', 'logs/sc.log',
-      '--verbose',
-      // ... any other Sauce Connect arguments you need (e.g., --region, --proxy, etc.)
-    ];
+    return new Promise((resolve, reject) => {
+      const sauceConnectArgsLegacy = [
+        'legacy',
+        '-u', process.env.SAUCE_USERNAME,
+        '-k', process.env.SAUCE_ACCESS_KEY,
+        '--region', 'us-west',
+        '--tunnel-name', 'applitools-proxy-test',
+        '--proxy', process.env.APPLITOOLS_PROXY_URL, '--proxy-tunnel',
+        '--status-address', 'localhost:8989',
+        '--verbose',
+        '--no-autodetect',
+        //'--logfile', 'logs/sc.log',
+        // ... any other Sauce Connect arguments you need (e.g., --region, --proxy, etc.)
+      ];
 
-    const scBinPath = process.env.SAUCE_CONNECT_BIN || '/usr/local/bin//sc'
+      const sauceConnectArgs = [
+        'run',
+        '--username', process.env.SAUCE_USERNAME,
+        '--access-key', process.env.SAUCE_ACCESS_KEY,
+        '--region', 'us-west',
+        '--tunnel-name', 'applitools-proxy-test',
+        '--proxy', process.env.APPLITOOLS_PROXY_URL,
+        '--proxy-localhost', 'allow',
+        //'--status-address', 'localhost:8989',
+        // '--logfile', 'logs/sc.log',
+        // '--verbose',
+        // ... any other Sauce Connect arguments you need (e.g., --region, --proxy, etc.)
+      ];
 
-    sc = spawn(scBinPath, sauceConnectArgs)
+      const scBinPath = process.env.SAUCE_CONNECT_BIN || '/usr/local/bin//sc'
 
-    const readyListener = (data) => {
-      const output = data.toString()
-      console.log('stdout:', output)
-      if (output.includes('Sauce Connect is up, you may start your tests')) {
-        resolve()
+      sc = spawn(scBinPath, sauceConnectArgsLegacy)
+
+      const readyListener = (data) => {
+        const output = data.toString()
+        console.log('stdout:', output)
+        if (output.includes('Sauce Connect is up, you may start your tests')) {
+          resolve()
+        }
       }
-    }
 
-    sc.stdout.on('data', readyListener)
+      sc.stdout.on('data', readyListener)
 
-    sc.stderr.on('data', data => {
-      console.log('stderr:', data.toString())
+      sc.stderr.on('data', data => {
+        console.log('stderr:', data.toString())
+      })
+
+      sc.on('error', reject)
+      sc.on('exit', code => {
+        if (code !== 0) reject(new Error(`Sauce Connect exited with code ${code}`))
+      })
     })
 
-    sc.on('error', reject)
-    sc.on('exit', code => {
-      if (code !== 0) reject(new Error(`Sauce Connect exited with code ${code}`))
-    })
-  })
-
-}
+  }
 })
-

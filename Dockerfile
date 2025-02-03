@@ -1,4 +1,4 @@
-FROM node:16-slim
+FROM node:20-slim
 
 # Install basic tools and cleanup in single layer
 RUN apt-get update && \
