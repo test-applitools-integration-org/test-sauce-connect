@@ -14,8 +14,6 @@ RUN apt-get update && \
     wget \
     && rm -rf /var/lib/apt/lists/*
  \
-    # Install wheel and other dependencies
-RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
 # Install Sauce Connect
 RUN curl -L -o /tmp/sauce-connect.deb \
@@ -36,11 +34,9 @@ WORKDIR /app
 # Copy requirements first to leverage Docker cache
 COPY pyproject.toml .
 COPY requirements.lock .
-COPY eyes_common-5.32.0-py2.py3-none-any.whl .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.lock
-RUN pip install eyes_common-5.32.0-py2.py3-none-any.whl
 
 # Copy test files
 COPY tests/ ./tests/

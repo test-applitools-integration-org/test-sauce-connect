@@ -7,8 +7,8 @@ authors = [
 ]
 dependencies = [
     "pytest>=8.3.4",
-    "appium-python-client>=4.4.0",
-    "eyes-selenium>=5.27.2",
+    "appium-python-client<1.0",
+    "eyes-selenium<4.0",
     "requests>=2.32.3",
 ]
 readme = "README.md"
