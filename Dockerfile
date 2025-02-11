@@ -1,4 +1,4 @@
-FROM ruby:3.1-slim
+FROM python:3.11-slim
 
 # Install basic tools and cleanup in single layer
 RUN apt-get update && \
@@ -13,6 +13,9 @@ RUN apt-get update && \
     netcat-traditional \
     wget \
     && rm -rf /var/lib/apt/lists/*
+ \
+    # Install wheel and other dependencies
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
 # Install Sauce Connect
 RUN curl -L -o /tmp/sauce-connect.deb \
@@ -22,22 +25,29 @@ RUN curl -L -o /tmp/sauce-connect.deb \
 
 ENV SAUCE_CONNECT_BIN=/usr/bin/sc
 ENV APPLITOOLS_LOG_DIR=./logs
-ENV APPLITOOLS_PROXY_URL="http://test-proxy:3128"
+ENV APPLITOOLS_PROXY_URL=http://test-proxy:3128
+
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
 # Set working directory
 WORKDIR /app
 
-# Copy test files
-COPY spec ./spec/
-COPY Gemfile .
-COPY setup_isolation.sh .
+# Copy requirements first to leverage Docker cache
+COPY pyproject.toml .
+COPY requirements.lock .
+COPY eyes_common-5.32.0-py2.py3-none-any.whl .
 
-# Install gems
-RUN gem install bundler && \
-    bundle install
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.lock
+RUN pip install eyes_common-5.32.0-py2.py3-none-any.whl
+
+# Copy test files
+COPY tests/ ./tests/
+COPY setup_isolation.sh .
 
 # Add container health verification script
 RUN chmod +x /app/setup_isolation.sh
 
-# Default command to verify isolation and run tests
-CMD ["/bin/bash", "-c", "/app/setup_isolation.sh && bundle exec rspec"]
+# Create directory for logs
+RUN mkdir -p /app/logs
