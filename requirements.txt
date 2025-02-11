@@ -1,4 +1,4 @@
 pytest
-appium-python-client<1.0
+appium-python-client==0.50
 eyes-selenium<4.0
 requests

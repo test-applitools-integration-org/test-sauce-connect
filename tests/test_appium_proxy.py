@@ -68,8 +68,6 @@ def appium_driver():
 @pytest.fixture(scope="function")
 def eyes():
     eyes = Eyes()
-    eyes.configure.app_name = "Applitools Eyes SDK"
-    eyes.configure.test_name = "Test Appium Sauce Connect Proxy"
     eyes.set_proxy(APPLITOOLS_PROXY_URL)
     return eyes
 
@@ -77,7 +75,10 @@ def eyes():
 @pytest.mark.sauce
 def test_appium_proxy(sauce_tunnel, appium_driver, eyes):
     print("Running Appium proxy test...")
-    eyes.open(driver=appium_driver)
+    eyes.open(driver=appium_driver,
+              app_name="Applitools Eyes SDK",
+              test_name="Test Appium Sauce Connect Proxy"
+    )
     eyes.check("Window Check", Target.window().fully())
     results = eyes.close(raise_ex=True)
     print(results)
