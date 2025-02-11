@@ -1,7 +1,6 @@
 import os
 import pytest
 from appium import webdriver
-from appium.options.android import UiAutomator2Options
 from applitools.selenium import Eyes, Target
 from spec_helper import SauceTunnel
 
@@ -42,6 +41,7 @@ def appium_driver():
         "platformName": "Android",
         "platformVersion": "7.0",
         "app": APP_APK_URL,
+        "appium:automationName": "UIAutomator2",
     }
 
     sauce_options = {
@@ -55,9 +55,8 @@ def appium_driver():
 
     capabilities["sauce:options"] = sauce_options
 
-    options = UiAutomator2Options().load_capabilities(capabilities)
 
-    driver = webdriver.Remote(command_executor=SAUCE_SERVER_URL, options=options)
+    driver = webdriver.Remote(command_executor=SAUCE_SERVER_URL, desired_capabilities=capabilities)
 
     yield driver
 
