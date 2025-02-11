@@ -2,6 +2,8 @@ import subprocess
 import time
 import os
 import signal
+from typing import Optional
+
 import requests
 from requests.exceptions import RequestException
 import platform
@@ -19,7 +21,7 @@ class SauceTunnel:
         sc_path: str,
         tunnel_name: str,
         dns: bool,
-        no_ssl_bump_domains: str | None,
+        no_ssl_bump_domains: Optional[str],
         proxy: str,
     ):
         self.sauce_connect = None
