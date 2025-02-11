@@ -39,8 +39,8 @@ COPY requirements.lock .
 COPY eyes_common-5.32.0-py2.py3-none-any.whl .
 
 # Install Python dependencies
-RUN PYTHONDONTWRITEBYTECODE=1 pip install --no-cache-dir -r requirements.lock
-RUN PYTHONDONTWRITEBYTECODE=1 pip install eyes_common-5.32.0-py2.py3-none-any.whl
+RUN pip install --no-cache-dir -r requirements.lock
+RUN pip install eyes_common-5.32.0-py2.py3-none-any.whl
 
 # Copy test files
 COPY tests/ ./tests/
