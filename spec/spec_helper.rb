@@ -2,6 +2,7 @@ require 'rest-client'
 require 'json'
 require 'timeout'
 require 'retriable'
+require_relative 'universal_sdk_inspector'
 
 class SauceTunnel
   attr_reader :sauce_connect

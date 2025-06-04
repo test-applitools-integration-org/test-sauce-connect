@@ -10,7 +10,7 @@ group :test, :development do
   gem 'rest-client'
   gem 'retriable'
   gem 'appium_lib'
-  gem 'eyes_appium'
+  gem 'eyes_appium' # Consider pinning version: , '~> 4.37.0'
   gem 'timeout'
 
 end

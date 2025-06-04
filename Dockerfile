@@ -31,13 +31,15 @@ WORKDIR /app
 COPY spec ./spec/
 COPY Gemfile .
 COPY setup_isolation.sh .
+COPY setup_enhanced_isolation.sh .
 
 # Install gems
 RUN gem install bundler && \
     bundle install
 
-# Add container health verification script
-RUN chmod +x /app/setup_isolation.sh
+# Add container health verification scripts
+RUN chmod +x /app/setup_isolation.sh && \
+    chmod +x /app/setup_enhanced_isolation.sh
 
 # Default command to verify isolation and run tests
 CMD ["/bin/bash", "-c", "/app/setup_isolation.sh && bundle exec rspec"]
